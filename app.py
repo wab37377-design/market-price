@@ -3,20 +3,32 @@ import pandas as pd
 
 st.title("🚀 AI Pricing Console")
 
-file = st.file_uploader("Upload Excel or CSV", type=["xlsx", "csv"])
+file = st.file_uploader("Upload Excel", type=["xlsx"])
 
 if file is not None:
-
-    if file.name.endswith('.xlsx'):
-        df = pd.read_excel(file)
-    else:
-        df = pd.read_csv(file)
+    df = pd.read_excel(file)
 
     st.subheader("📊 Original Data")
     st.dataframe(df)
 
-    # تلقائي يبحث عن أول عمود رقمي
-    numeric_cols = df.select_dtypes(include="number").columns.tolist()
+    # نأخذ أعمدة الأسعار من اليمين تلقائي (إذا كانت أرقام)
+    price_cols = df.select_dtypes(include="number").columns.tolist()
 
-    if len(numeric_cols) < 1:
-        st.error("❌ ما فيه أي عمود أرقام في الملف")
+    if len(price_cols) == 0:
+        st.error("❌ ما فيه أعمدة أسعار رقمية في الملف")
+    else:
+        # نحسب أقل سعر لكل صف
+        df["Min Price"] = df[price_cols].min(axis=1)
+
+        # نحدد أرخص منافس
+        df["Best Competitor"] = df[price_cols].idxmin(axis=1)
+
+        # قرار بسيط
+        df["Decision"] = "🔥 Attack"
+
+        st.subheader("✅ Results")
+        st.dataframe(df)
+
+else:
+    st.info("⬆️ Upload your Excel file")
+``
