@@ -3,9 +3,9 @@ import pandas as pd
 
 st.title("🚀 AI Pricing Console")
 
-file = st.file_uploader("Upload Excel or CSV", type=["xlsx","csv"])
+file = st.file_uploader("Upload Excel or CSV", type=["xlsx", "csv"])
 
-if file:
+if file is not None:
     if file.name.endswith('.xlsx'):
         df = pd.read_excel(file)
     else:
@@ -16,13 +16,13 @@ if file:
 
     columns = df.columns.tolist()
 
-    sku = st.selectbox("Select Product Column", columns)
-    price = st.selectbox("Select Competitor Price", columns)
-    demand = st.selectbox("Select Demand/Sales", columns)
+    sku_col = st.selectbox("Product Column", columns)
+    price_col = st.selectbox("Competitor Price", columns)
+    demand_col = st.selectbox("Sales / Demand", columns)
 
-    df["Predicted Price"] = df[price] - (df[demand] * 0.5)
+    df["Predicted Price"] = df[price_col] - (df[demand_col] * 0.5)
 
-    def action(x):
+    def get_action(x):
         if x > 50:
             return "🔥 Attack"
         elif x > 20:
@@ -30,11 +30,10 @@ if file:
         else:
             return "💰 Profit"
 
-    df["Decision"] = df[demand].apply(action)
+    df["Decision"] = df[demand_col].apply(get_action)
 
     st.subheader("🧠 AI Results")
-    st.dataframe(df[[sku, price, "Predicted Price", demand, "Decision"]])
+    st.dataframe(df[[sku_col, price_col, "Predicted Price", demand_col, "Decision"]])
 
 else:
     st.info("⬆️ Upload your file to start")
-``
