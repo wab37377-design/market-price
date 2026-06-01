@@ -8,14 +8,7 @@ file = st.file_uploader("Upload Excel", type=["xlsx"])
 if file:
     df = pd.read_excel(file)
 
-# تحديد أعمدة المنافسين يدويًا (حسب ملفك)
-price_cols = ["EXTRA", "SWSG", "ALMANEA", "B BOX", "ALKHUNZAIN", "BH"]
-price_cols = [col for col in price_cols if col in df.columns]
+    # الأعمدة المطلوبة (حسب ملفك)
+    price_cols = ["EXTRA", "SWSG", "ALMANEA", "B BOX", "ALKHUNZAIN", "BH"]
+    price_cols = [col for col in price_cols if col in df.columns]
 
-    if len(price_cols) == 0:
-        st.write("No price columns found")
-    else:
-        df["Min Price"] = df[price_cols].min(axis=1)
-        df["Best Source"] = df[price_cols].idxmin(axis=1)
-
-        st.dataframe(df)
