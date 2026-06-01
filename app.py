@@ -37,3 +37,13 @@ df["Predicted Price"] = df[price_col] - (df[demand_col] * 0.5)
 
 else:
     st.info("⬆️ Upload your file to start")
+    # تحويل الأعمدة إلى أرقام (حتى لو فيها نصوص)
+df[price_col] = pd.to_numeric(df[price_col], errors='coerce')
+df[demand_col] = pd.to_numeric(df[demand_col], errors='coerce')
+
+# حذف القيم الفارغة
+df = df.dropna(subset=[price_col, demand_col])
+
+# الحساب
+df["Predicted Price"] = df[price_col] - (df[demand_col] * 0.5)
+``
