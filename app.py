@@ -20,7 +20,7 @@ if file is not None:
     price_col = st.selectbox("Competitor Price", columns)
     demand_col = st.selectbox("Sales / Demand", columns)
 
-    df["Predicted Price"] = df[price_col] - (df[demand_col] * 0.5)
+df["Predicted Price"] = df[price_col] - (df[demand_col] * 0.5)
 
     def get_action(x):
         if x > 50:
