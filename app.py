@@ -15,16 +15,8 @@ if file is not None:
     st.subheader("📊 Original Data")
     st.dataframe(df)
 
-    columns = df.columns.tolist()
+    # تلقائي يبحث عن أول عمود رقمي
+    numeric_cols = df.select_dtypes(include="number").columns.tolist()
 
-    sku_col = st.selectbox("Product Column", columns)
-    price_col = st.selectbox("Competitor Price", columns)
-    demand_col = st.selectbox("Sales / Demand", columns)
-
-    # تنظيف البيانات
-    df[price_col] = pd.to_numeric(df[price_col], errors='coerce')
-    df[demand_col] = pd.to_numeric(df[demand_col], errors='coerce')
-
-    df = df.dropna(subset=[price_col, demand_col])
-
-    # حساب السعر المتوقع
+    if len(numeric_cols) < 1:
+        st.error("❌ ما فيه أي عمود أرقام في الملف")
